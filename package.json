@@ -1,0 +1,26 @@
+{
+  "name": "qp-view",
+  "version": "1.0.0",
+  "description": "view management",
+  "main": "index.js",
+  "dependencies": {
+    "parse5": "^3.0.1",
+    "qp-define": "^1.2.17",
+    "qp-library": "^1.1.40",
+    "qp-utility": "^1.2.51"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjr--/qp-view.git"
+  },
+  "author": "CJR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cjr--/qp-view/issues"
+  },
+  "homepage": "https://github.com/cjr--/qp-view#readme"
+}
