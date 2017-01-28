@@ -3,6 +3,7 @@ define(module, function(exports, require) {
   var path = require('path');
   var parse5 = require('parse5');
   var qp = require('qp-utility');
+  var xml = require('qp-view/xml');
   var fss = require('qp-library/fss');
   var log = require('qp-library/log');
 
@@ -23,8 +24,12 @@ define(module, function(exports, require) {
       return this.parse(fss.read(filename), content);
     },
 
-    serialize: function(node) {
-      return parse5.serialize(node);
+    serialize: function(node, options) {
+      var html = parse5.serialize(node.parentNode || node);
+      if (options && options.format) {
+        return xml.format(html, options);
+      }
+      return html;
     },
 
     create: function() {
@@ -85,6 +90,34 @@ define(module, function(exports, require) {
         return old_node;
       }
       return null;
+    },
+
+    get_class_list: function(node) {
+      var value = this.get_attribute(node, 'class');
+      if (value !== null) {
+        return qp.compact(qp.split(value,  ' '));
+      } else {
+        return [];
+      }
+    },
+
+    set_class_list: function(node, class_list) {
+      var old_class_list = this.get_class_list(node);
+      if (qp.not_empty(old_class_list)) {
+        if (qp.is(class_list, 'string')) class_list = qp.split(class_list, ' ');
+        var new_class_list = qp.compact(class_list);
+        if (qp.not_empty(new_class_list)) {
+          class_list = old_class_list.concat(new_class_list);
+          this.set_attribute(node, 'class', qp.join(qp.unique(class_list), ' '));
+        }
+      } else {
+        if (qp.is(class_list, 'array')) class_list = qp.join(class_list, ' ');
+        if (qp.not_empty(class_list)) {
+          this.set_attribute(node, 'class', class_list);
+        } else {
+          this.remove_attribute(node, 'class');
+        }
+      }
     },
 
     has_attributes: function(node) {
@@ -162,6 +195,20 @@ define(module, function(exports, require) {
         }
       }
       return null;
+    },
+
+    remove_attributes: function(node) {
+      var keys = qp.rest(arguments);
+      var attributes = node.attrs;
+      if (attributes) {
+        node.attrs = [];
+        for (var i = 0, l = attributes.length; i < l; i++) {
+          var attribute = attributes[i];
+          if (qp.not_in(attribute.name, keys)) {
+            node.attrs.push(attribute);
+          }
+        }
+      }
     },
 
     log_node: function(node, text_nodes, depth) {
