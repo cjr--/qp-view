@@ -24,7 +24,8 @@ define(module, function(exports, require, make) {
       this.node = this.parse_file(options.file);
       this.token = this.tokenize(this.node);
       this.parse_node(this.token, this.node);
-      this.html = parser.serialize(this.node, { format: true, offset: '    ' });
+      this.html = parser.serialize(this.node, { format: true, offset: '  ' });
+      debugger;
     },
 
     parse_file: function(filename) {
@@ -63,8 +64,10 @@ define(module, function(exports, require, make) {
         token.dir = path.join(token.type, token.name);
         token.title = attributes['v-title'] || '';
         token.template = attributes['v-template'] + '.html';
+        token.app_name = attributes['v-name'] || token.title;
         token.color = attributes['v-color'] || '#5C005D';
-        parser.remove_attributes(node, 'v-title', 'v-template', 'v-color');
+        token.display = attributes['v-display'] || 'standalone';
+        parser.remove_attributes(node, 'v-title', 'v-template', 'v-name', 'v-color', 'v-display');
       } else if (attributes['v-view']) {
         token.type = 'view';
       } else if (attributes['v-control']) {
