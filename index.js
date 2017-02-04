@@ -25,7 +25,6 @@ define(module, function(exports, require, make) {
       this.token = this.tokenize(this.node);
       this.parse_node(this.token, this.node);
       this.html = parser.serialize(this.node, { format: true, offset: '  ' });
-      debugger;
     },
 
     parse_file: function(filename) {
@@ -60,14 +59,8 @@ define(module, function(exports, require, make) {
       var attributes = parser.get_attributes(node);
       if (attributes['v-page']) {
         token.type = 'page';
-        token.name = attributes['v-page'];
-        token.dir = path.join(token.type, token.name);
-        token.title = attributes['v-title'] || '';
-        token.template = attributes['v-template'] + '.html';
-        token.app_name = attributes['v-name'] || token.title;
-        token.color = attributes['v-color'] || '#5C005D';
-        token.display = attributes['v-display'] || 'standalone';
-        parser.remove_attributes(node, 'v-title', 'v-template', 'v-name', 'v-color', 'v-display');
+        token.page = attributes['v-page'];
+        token.dir = path.join(token.type, token.page);
       } else if (attributes['v-view']) {
         token.type = 'view';
       } else if (attributes['v-control']) {
