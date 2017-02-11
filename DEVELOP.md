@@ -1,7 +1,9 @@
 ## TODO
 
 - Create a build process, and a dist folder
-- replace xml parser with https://github.com/beautify-web/js-beautify
+- replace xml parser with;
+  - https://github.com/beautify-web/js-beautify
+  - https://github.com/maxogden/commonjs-html-prettyprinter
 
 ## Build
 
