@@ -60,7 +60,9 @@ define(module, function(exports, require, make) {
       if (attributes['v-page']) {
         token.type = 'page';
         token.page = attributes['v-page'];
+        token.title = attributes['v-title'];
         token.dir = path.join(token.type, token.page);
+        parser.remove_attributes(node, 'v-title');
       } else if (attributes['v-view']) {
         token.type = 'view';
       } else if (attributes['v-control']) {
