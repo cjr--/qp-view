@@ -138,9 +138,12 @@ define(module, function(exports, require, make) {
         negate: false,
         priority: 99
       };
-      if (qp.match(attribute_name, 'not *')) {
+      if (qp.match(binding.path, 'not *')) {
         binding.path = attribute.value.slice(4);
         binding.negate = true;
+      }
+      if (qp.match(binding.path, 'app.*')) {
+        binding.path = 'global.' + binding.path;
       }
       if (qp.in(binding.type, 'node', 'page')) {
         node.ignore = true;
