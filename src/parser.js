@@ -25,11 +25,15 @@ define(module, function(exports, require) {
     },
 
     serialize: function(node, options) {
-      var html = parse5.serialize(node.parentNode || node);
-      if (options && options.format) {
-        return xml.format(html, options);
+      if (node) {
+        var html = parse5.serialize(node.parentNode || node);
+        if (options && options.format) {
+          return xml.format(html, options);
+        }
+        return html;
+      } else {
+        return '';
       }
-      return html;
     },
 
     create: function() {
@@ -147,11 +151,13 @@ define(module, function(exports, require) {
 
     get_attributes: function(node) {
       var o = { };
-      var attributes = node.attrs;
-      if (attributes) {
-        for (var i = 0, l = attributes.length; i < l; i++) {
-          var attribute = attributes[i];
-          o[attribute.name] = attribute.value;
+      if (node) {
+        var attributes = node.attrs;
+        if (attributes) {
+          for (var i = 0, l = attributes.length; i < l; i++) {
+            var attribute = attributes[i];
+            o[attribute.name] = attribute.value;
+          }
         }
       }
       return o;

@@ -34,7 +34,8 @@ define(module, function(exports, require, make) {
     },
 
     parse_node: function(token, node) {
-      qp.each(node.childNodes, (child_node) => {
+      var child_nodes = node ? node.childNodes : null;
+      qp.each(child_nodes, (child_node) => {
         var child_token = this.tokenize(child_node);
         if (child_token) {
           var new_node = this.parse_file(child_token.filename);
