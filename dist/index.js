@@ -4,8 +4,8 @@ define(module, function(exports, require, make) {
   var glob = require('glob');
   var qp = require('qp-utility');
   var fss = require('qp-library/fss');
-  var parser = require('qp-view/parser');
   var log = require('qp-library/log');
+  var parser = require('qp-view/src/parser');
 
   make({
 
