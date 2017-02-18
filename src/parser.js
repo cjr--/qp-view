@@ -3,9 +3,9 @@ define(module, function(exports, require) {
   var path = require('path');
   var parse5 = require('parse5');
   var qp = require('qp-utility');
-  var xml = require('qp-view/xml');
   var fss = require('qp-library/fss');
   var log = require('qp-library/log');
+  var xml = require('qp-view/src/xml');
 
   exports({
 

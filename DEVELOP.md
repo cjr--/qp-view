@@ -10,5 +10,6 @@
 ## Binding
 
 - IE 11 & Proxies
+  - http://stackoverflow.com/questions/35610242/detecting-changes-in-a-javascript-array-using-the-proxy-object
 - Move ViewModel out of qp-utility to here
 - document the interface

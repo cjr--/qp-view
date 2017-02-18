@@ -9,7 +9,7 @@ define(module, function(exports, require, make) {
 
   make({
 
-    ns: 'qp-view/view',
+    ns: 'qp-view/builder',
 
     root_directory: '',
 
@@ -65,8 +65,8 @@ define(module, function(exports, require, make) {
         parser.remove_attributes(node, 'v-title');
       } else if (attributes['v-view']) {
         token.type = 'view';
-      } else if (attributes['v-control']) {
-        token.type = 'control';
+      } else if (attributes['v-component']) {
+        token.type = 'component';
       } else {
         return null;
       }
@@ -74,7 +74,7 @@ define(module, function(exports, require, make) {
       token.class = attributes.class || '';
       token.path = path.join(this.root_directory, token.dir || token.type, attributes['v-' + token.type]);
       token.filename = path.join(token.path, path.basename(token.path) + '.html');
-      if (token.view || token.control) {
+      if (token.view || token.component) {
         token.pattern = path.join(token.path, path.basename(token.path)) + '.+(js|css)';
       }
       return token;
