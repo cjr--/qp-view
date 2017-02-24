@@ -15,8 +15,8 @@ define(module, function(exports, require, make) {
         element: qp.element(o.el || o.element),
         bindings: []
       };
-      if (o.bind) this.bind();
-      if (o.update_view) this.update_view();
+      if (o.auto || o.bind) this.bind();
+      if (o.auto || (o.bind && o.update_view)) this.update_view();
     },
 
     bind: function() {
@@ -68,6 +68,10 @@ define(module, function(exports, require, make) {
     },
 
     parse_node: function(node) {
+      if (qp.has_attr(node.element, 'v-scope')) {
+        node.element.removeAttribute('v-scope');
+        return;
+      }
       qp.each(qp.get_attributes(node.element), function(attribute) {
         if (attribute.name.slice(0, 2) === 'v-') {
           var binding = this.create_binding(node, attribute);
