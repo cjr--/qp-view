@@ -284,6 +284,8 @@ define(module, function(exports, require, make) {
 
     view: null,
 
+    visible: false,
+
     controls: [],
 
     init: function(o) {
@@ -294,6 +296,23 @@ define(module, function(exports, require, make) {
         bind: o.bind,
         update_view: o.draw
       });
+    },
+
+    set_visible: function(visible) {
+      if (this.visible !== visible) {
+        this.visible = visible;
+        this.draw();
+      }
+    },
+
+    show: function() {
+      this.visible = true;
+      this.draw();
+    },
+
+    hide: function() {
+      this.visible = false;
+      this.draw();
     },
 
     draw: function(node) {
