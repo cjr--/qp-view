@@ -40,6 +40,9 @@ define(module, function(exports, require, make) {
         if (child_token) {
           var new_node = this.parse_file(child_token.filename);
           if (new_node) {
+            if (child_token.scope) {
+              parser.set_attribute(new_node, 'v-scope', 'true');
+            }
             qp.each(glob.sync(child_token.pattern), (file) => {
               if (qp.not_in(file, this.file_list)) this.file_list.push(file);
             });
@@ -66,8 +69,10 @@ define(module, function(exports, require, make) {
         parser.remove_attributes(node, 'v-title');
       } else if (attributes['v-view']) {
         token.type = 'view';
+        token.scope = true;
       } else if (attributes['v-component']) {
-        token.type = 'component';
+        token.type = 'component';      
+        token.scope = true;
       } else {
         return null;
       }
