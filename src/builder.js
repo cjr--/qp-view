@@ -40,7 +40,9 @@ define(module, function(exports, require, make) {
         if (child_token) {
           var new_node = this.parse_file(child_token.filename);
           if (new_node) {
-            if (child_token.scope) parser.set_attribute(new_node, 'v-scope', 'true');
+            if (child_token.is_view) {
+              parser.set_attribute(new_node, 'v-view', child_token.view);
+            }
             qp.each(glob.sync(child_token.pattern), (file) => {
               if (qp.not_in(file, this.file_list)) this.file_list.push(file);
             });
@@ -67,13 +69,14 @@ define(module, function(exports, require, make) {
         parser.remove_attributes(node, 'v-title');
       } else if (attributes['v-view']) {
         token.type = 'view';
-        token.scope = true;
+        token.view = attributes['v-view'];
       } else if (attributes['v-component']) {
         token.type = 'component';
+        token.component = attributes['v-component'];
       } else {
         return null;
       }
-      token[token.type] = true;
+      token['is_' + token.type] = true;
       token.class = attributes.class || '';
       token.path = path.join(this.root_directory, token.dir || token.type, attributes['v-' + token.type]);
       token.filename = path.join(token.path, path.basename(token.path) + '.html');
