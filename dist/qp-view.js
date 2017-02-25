@@ -188,6 +188,13 @@ define(module, function(exports, require, make) {
       };
     },
 
+    add_class: function(binding, element) {
+      binding.update_view = function(model) {
+        qp.add_class(element, qp.get(model, binding.path));
+      };
+      binding.update_model = function(model) { };
+    },
+
     style: function(binding, element) {
       binding.update_view = function(model) {
         qp.set_style(element, binding.style, qp.get(model, binding.path));
