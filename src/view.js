@@ -6,13 +6,17 @@ define(module, function(exports, require, make) {
 
     ns: 'qp-view/view',
 
+    element: null,
+
     model: null,
     node: null,
 
     init: function(o) {
+      debug('view.init', this.model.self.ns, '->', o.element)
       this.model = o.model;
+      this.element = qp.element(o.el || o.element);
       this.node = {
-        element: qp.element(o.el || o.element),
+        element: this.element,
         bindings: []
       };
       if (o.auto || o.bind) this.bind();
@@ -49,6 +53,11 @@ define(module, function(exports, require, make) {
     },
 
     parse: function(node) {
+      if (qp.has_attr(node.element, 'v-view')) {
+        debug('view.bind @', qp.attr(node.element, 'v-view'))
+        node.element.removeAttribute('v-view');
+        return node;
+      }
       this.parse_node(node);
       if (node.element.parentNode) {
         node.children = qp.select(qp.to_array(node.element.children), function(child_element) {
@@ -68,10 +77,6 @@ define(module, function(exports, require, make) {
     },
 
     parse_node: function(node) {
-      if (qp.has_attr(node.element, 'v-scope')) {
-        node.element.removeAttribute('v-scope');
-        return;
-      }
       qp.each(qp.get_attributes(node.element), function(attribute) {
         if (attribute.name.slice(0, 2) === 'v-') {
           var binding = this.create_binding(node, attribute);
