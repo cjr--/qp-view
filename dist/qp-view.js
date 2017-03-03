@@ -250,17 +250,29 @@ define(module, function(exports, require, make) {
     on: function(binding, element) {
       binding.update_view = function(model) {
         if (!binding.bound) {
-          binding.event_listener = function(e) {
-            qp.nodefault(e);
-            var id = element.getAttribute('data-id');
-            if (!id) {
-              id = qp.parents_until(e.target, element,
-                function(el) { return el.getAttribute('data-id'); }
-              );
-            }
-            qp.get(model, binding.path).call(model, Number(id));
-          };
-          qp.on(element, binding.event, binding.event_listener);
+          if (qp.in(binding.event, 'keyup', 'keydown')) {
+            binding.event_listener = function(e) {
+              qp.get(model, binding.path).call(model, e);
+            };
+          } else if (qp.in(binding.event, 'submit')) {
+            binding.event_listener = function(e) {
+              qp.nodefault(e);
+              qp.get(model, binding.path).call(model, e.target);
+              return false;
+            };
+          } else if (qp.in(binding.event, 'click')) {
+            binding.event_listener = function(e) {
+              qp.nodefault(e);
+              var id = element.getAttribute('data-id');
+              if (!id) {
+                id = qp.parents_until(e.target, element,
+                  function(el) { return el.getAttribute('data-id'); }
+                );
+              }
+              qp.get(model, binding.path).call(model, Number(id));
+            };
+          }
+          qp.on(element, binding.event, binding.event_listener || qp.noop);
           binding.bound = true;
         }
       };
@@ -332,6 +344,8 @@ define(module, function(exports, require, make) {
     },
 
     read: function(node) {
+      this.view.update_model(node);
+
       // should this return an independant tree?
       // one-way binding but still able to get control values
       // one.5-way binding?
