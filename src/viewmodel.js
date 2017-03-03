@@ -45,6 +45,8 @@ define(module, function(exports, require, make) {
     },
 
     read: function(node) {
+      this.view.update_model(node);
+
       // should this return an independant tree?
       // one-way binding but still able to get control values
       // one.5-way binding?
