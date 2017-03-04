@@ -12,7 +12,7 @@ define(module, function(exports, require, make) {
     node: null,
 
     init: function(o) {
-      debug('view.init', this.model.self.ns, '->', o.element)
+      // debug('view.init', this.model.self.ns, '->', o.element)
       this.model = o.model;
       this.element = qp.element(o.el || o.element);
       this.node = {

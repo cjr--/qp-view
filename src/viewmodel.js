@@ -10,6 +10,8 @@ define(module, function(exports, require, make) {
     view: null,
 
     visible: false,
+    item_key: '',
+    list_key: '',
 
     controls: [],
 
@@ -22,6 +24,14 @@ define(module, function(exports, require, make) {
         update_view: o.draw
       });
     },
+
+    setup: function() { },
+    load: function(data, done) { done(); },
+    get_data: function(done) { },
+    ready: function() { },
+    requery: function(done) { this.get_data(done); },
+    unload: function() { },
+    reset: function() { },
 
     set_visible: function(visible) {
       if (this.visible !== visible) {

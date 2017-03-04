@@ -12,7 +12,7 @@ define(module, function(exports, require, make) {
     node: null,
 
     init: function(o) {
-      debug('view.init', this.model.self.ns, '->', o.element)
+      // debug('view.init', this.model.self.ns, '->', o.element)
       this.model = o.model;
       this.element = qp.element(o.el || o.element);
       this.node = {
@@ -309,6 +309,8 @@ define(module, function(exports, require, make) {
     view: null,
 
     visible: false,
+    item_key: '',
+    list_key: '',
 
     controls: [],
 
@@ -321,6 +323,14 @@ define(module, function(exports, require, make) {
         update_view: o.draw
       });
     },
+
+    setup: function() { },
+    load: function(data, done) { done(); },
+    get_data: function(done) { },
+    ready: function() { },
+    requery: function(done) { this.get_data(done); },
+    unload: function() { },
+    reset: function() { },
 
     set_visible: function(visible) {
       if (this.visible !== visible) {
