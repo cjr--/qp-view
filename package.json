@@ -1,6 +1,6 @@
 {
   "name": "qp-view",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "view management",
   "main": "dist/index.js",
   "dependencies": {
