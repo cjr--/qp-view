@@ -170,7 +170,7 @@ define(module, function(exports, require, make) {
       binding.update_view = function(model) {
         var toggle = qp.get(model, binding.path);
         if ((binding.show && toggle) || (binding.hide && !toggle)) {
-          qp.show(element);
+          qp.show(element, 'block');
         } else {
           qp.hide(element);
         }
