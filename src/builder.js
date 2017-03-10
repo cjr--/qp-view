@@ -44,7 +44,7 @@ define(module, function(exports, require, make) {
               parser.set_attribute(new_node, 'v-view', child_token.view);
             }
             qp.each(glob.sync(child_token.pattern), (file) => {
-              if (qp.not_in(file, this.file_list)) this.file_list.push(file);
+              if (qp.not_in(file, this.file_list)) this.file_list.unshift(file);
             });
             parser.set_class_list(new_node, parser.get_class_list(child_node));
             child_token = this.tokenize(new_node) || child_token;
