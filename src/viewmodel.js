@@ -2,12 +2,15 @@ define(module, function(exports, require, make) {
 
   var qp = require('qp-utility');
   var view = require('qp-view/view');
+  var controller = require('qp-view/controller');
 
   make({
 
     ns: 'qp-view/viewmodel',
 
     view: null,
+
+    controller: null,
 
     visible: false,
     item_key: '',
@@ -28,25 +31,32 @@ define(module, function(exports, require, make) {
     setup: function() { },
     load: function(data, done) { done(); },
     get_data: function(done) { },
-    ready: function() { },
+    show: function() { },
     requery: function(done) { this.get_data(done); },
+    hide: function() { },
     unload: function() { },
     reset: function() { },
 
-    set_visible: function(visible) {
-      if (this.visible !== visible) {
-        this.visible = visible;
-        this.draw();
+    create_controller: function() {
+      this.controller = controller.create({ });
+    },
+
+    views: function(views) {
+      if (qp.empty(this.controller)) {
+        this.controller = controller.create({ });
       }
+      qp.each(views, this.controller.add_view);
     },
 
-    show: function() {
-      this.visible = true;
-      this.draw();
-    },
+    toggle_view: function(o) { this.controller.toggle_view(o); },
+    swap_view: function(o) { this.controller.swap_view(o); },
+    next_view: function(o) { this.controller.next_view(o); },
+    back_view: function(o) { this.controller.back_view(o); },
+    show_view: function(o) { this.controller.show_view(o); },
+    hide_view: function(o) { this.controller.hide_view(o); },
 
-    hide: function() {
-      this.visible = false;
+    set_visible: function(visible) {
+      this.visible = visible;
       this.draw();
     },
 
