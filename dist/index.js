@@ -42,6 +42,7 @@ define(module, function(exports, require, make) {
           if (new_node) {
             if (child_token.is_view) {
               parser.set_attribute(new_node, 'v-view', child_token.view);
+              parser.set_attribute(new_node, 'style', 'display: none;');
             }
             qp.each(glob.sync(child_token.pattern), (file) => {
               if (qp.not_in(file, this.file_list)) this.file_list.unshift(file);

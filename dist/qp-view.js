@@ -170,13 +170,13 @@ define(module, function(exports, require, make) {
       binding.update_view = function(model) {
         var toggle = qp.get(model, binding.path);
         if ((binding.show && toggle) || (binding.hide && !toggle)) {
-          qp.show(element, 'block');
+          qp.show(element, 'auto');
         } else {
-          qp.hide(element);
+          qp.hide(element, 'none');
         }
       };
       binding.update_model = function(model) {
-        qp.set(model, binding.path, (element.style.display === 'block' && binding.show));
+        qp.set(model, binding.path, (element.style.display !== 'none' && binding.show));
       };
     },
 
@@ -300,13 +300,139 @@ define(module, function(exports, require, make) {
 define(module, function(exports, require, make) {
 
   var qp = require('qp-utility');
+  var store = require('qp-utility/store');
+
+  make({
+
+    ns: 'qp-view/controller',
+
+    views: [],
+
+    history: [],
+
+    init: function(o) {
+      this.store = store.create({ key: 'help.littleacorns', ctx: o.state_context });
+    },
+
+    add_view: function(o) {
+      this.views.push({ key: o.key, ctor: o.ctor, el: o.el });
+      if (o.auto) {
+        var next_view = qp.find(this.views, { key: o.key });
+        if (next_view) {
+          this.history.push(next_view);
+          this.show_view(o);
+        }
+      }
+    },
+
+    toggle_view: function(o) {
+      var view = qp.find(this.views, { key: o.key });
+      if (view) {
+        if (view.instance && view.instance.visible) {
+          this.hide_view(o);
+        } else {
+          this.show_view(o);
+        }
+      }
+    },
+
+    next_view: function(o) {
+      var last_view = this.history[this.history.length - 1];
+      if (last_view) {
+        this.hide_view({ key: last_view.key });
+      }
+      var next_view = qp.find(this.views, { key: o.key });
+      if (next_view) {
+        this.history.push(next_view);
+        this.show_view(o);
+      }
+    },
+
+    back_view: function(o) {
+      var current_view = this.history.pop();
+      if (current_view) {
+        this.hide_view({ key: current_view.key });
+      }
+      var previous_view = qp.find(this.views, { key: o.key });
+      if (previous_view) {
+        this.show_view(o);
+      }
+    },
+
+    swap_view: function(o) {
+      var current_view = this.history.pop();
+      if (current_view) {
+        this.hide_view({ key: current_view.key });
+      }
+      var next_view = qp.find(this.views, { key: o.key });
+      if (next_view) {
+        this.history.push(next_view);
+        this.show_view(o);
+      }
+    },
+
+    show_view: function(o) {
+      var view = qp.find(this.views, { key: o.key });
+      if (view) {
+        view.instance || (view.instance = view.ctor.create({ el: view.el, controller: this }));
+        view.instance.load(o, function load_complete() {
+          view.instance.set_visible(true);
+          view.instance.show();
+          if (o.done) o.done();
+        }.bind(this));
+      }
+    },
+
+    hide_view: function(o) {
+      var view = qp.find(this.views, { key: o.key });
+      if (view) {
+        view.instance.set_visible(false);
+        view.instance.hide();
+        view.instance.unload();
+        if (o.done) o.done();
+      }
+    }
+
+  });
+
+});
+
+define(module, function(exports, require, make) {
+
+  var qp = require('qp-utility');
+
+  make({
+
+    ns: 'Model',
+
+    set_members: function(o) {
+      qp.each_own(o, function(v, k) { this.set_member(k, v); }.bind(this));
+    },
+
+    set_member: function(key, o) {
+      if (o) {
+        this[key] = o;
+        this[key + '_id'] = o.id;
+      }
+    }
+
+  });
+
+});
+
+define(module, function(exports, require, make) {
+
+  var qp = require('qp-utility');
   var view = require('qp-view/view');
+  var controller = require('qp-view/controller');
 
   make({
 
     ns: 'qp-view/viewmodel',
 
     view: null,
+
+    controller: null,
 
     visible: false,
     item_key: '',
@@ -327,25 +453,32 @@ define(module, function(exports, require, make) {
     setup: function() { },
     load: function(data, done) { done(); },
     get_data: function(done) { },
-    ready: function() { },
+    show: function() { },
     requery: function(done) { this.get_data(done); },
+    hide: function() { },
     unload: function() { },
     reset: function() { },
 
-    set_visible: function(visible) {
-      if (this.visible !== visible) {
-        this.visible = visible;
-        this.draw();
+    create_controller: function() {
+      this.controller = controller.create({ });
+    },
+
+    views: function(views) {
+      if (qp.empty(this.controller)) {
+        this.controller = controller.create({ });
       }
+      qp.each(views, this.controller.add_view);
     },
 
-    show: function() {
-      this.visible = true;
-      this.draw();
-    },
+    toggle_view: function(o) { this.controller.toggle_view(o); },
+    swap_view: function(o) { this.controller.swap_view(o); },
+    next_view: function(o) { this.controller.next_view(o); },
+    back_view: function(o) { this.controller.back_view(o); },
+    show_view: function(o) { this.controller.show_view(o); },
+    hide_view: function(o) { this.controller.hide_view(o); },
 
-    hide: function() {
-      this.visible = false;
+    set_visible: function(visible) {
+      this.visible = visible;
       this.draw();
     },
 
