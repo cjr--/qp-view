@@ -5,11 +5,16 @@ define(module, function(exports, require) {
   var path = require('path');
   var cp = require('child_process');
   var watch = require('node-watch');
+  var qp = require('qp-utility');
   var log = require('qp-library/log');
   var exit = require('qp-library/exit');
   var term = require('qp-library/term');
 
   term.set_title('build @ qp-view');
+  term.keypress((key) => {
+    if (key === 'b') build();
+    else if (key === 'esc') exit_process();
+  });
   log.clear();
   log(log.blue_white(' qp-view '));
 
@@ -18,11 +23,18 @@ define(module, function(exports, require) {
   ]);
 
   watcher.on('change', file => {
-    if (/\.(js|css)$/.test(file)) {
-      cp.execFile('node', ['build'], (error, stdout, stderr) => {
-        console.log(stdout);
-      });
-    }
+    if (/\.(js|css)$/.test(file)) build();
   });
+
+  function build() {
+    cp.execFile('node', ['build'], () => {
+      log('build @ ' + qp.now('utc'));
+    });
+  }
+
+  function exit_process() {
+    watcher.close();
+    process.exit(0);
+  }
 
 });

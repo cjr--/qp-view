@@ -3,13 +3,11 @@ var fs = require('fs');
 var uglify = require('uglify-js');
 var qp = require('qp-utility');
 
-var files = [ 'view.js', 'viewmodel.js' ];
+var files = [ 'view.js', 'controller.js', 'model.js', 'viewmodel.js' ];
 
 write_file('index.js', read_file('builder.js'));
 write_file('qp-view.js', join_files(files));
 write_file('qp-view.min.js', make_min_file('qp-view.js'));
-
-console.log('build @', qp.now('utc'));
 
 function make_min_file(filename) {
   var min = uglify.minify(path.join('dist', filename), { compress: { dead_code: false, unused: false } });
