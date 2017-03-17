@@ -170,13 +170,13 @@ define(module, function(exports, require, make) {
       binding.update_view = function(model) {
         var toggle = qp.get(model, binding.path);
         if ((binding.show && toggle) || (binding.hide && !toggle)) {
-          qp.show(element, 'block');
+          qp.show(element, 'auto');
         } else {
-          qp.hide(element);
+          qp.hide(element, 'none');
         }
       };
       binding.update_model = function(model) {
-        qp.set(model, binding.path, (element.style.display === 'block' && binding.show));
+        qp.set(model, binding.path, (element.style.display !== 'none' && binding.show));
       };
     },
 
