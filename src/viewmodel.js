@@ -32,22 +32,23 @@ define(module, function(exports, require, make) {
     load: function(data, done) { done(); },
     get_data: function(done) { },
     show: function() { },
+    ready: function() { },
     requery: function(done) { this.get_data(done); },
     hide: function() { },
     unload: function() { },
     reset: function() { },
 
-    create_controller: function() {
-      this.controller = controller.create({ });
+    create_controller: function(name) {
+      this.controller = controller.create({ name: name });
     },
 
     views: function(views) {
-      if (qp.empty(this.controller)) {
-        this.controller = controller.create({ });
+      if (this.controller) {
+        qp.each(views, this.controller.add_view);
       }
-      qp.each(views, this.controller.add_view);
     },
 
+    get_current_view: function() { return this.controller.get_current_view(); },
     toggle_view: function(o) { this.controller.toggle_view(o); },
     swap_view: function(o) { this.controller.swap_view(o); },
     next_view: function(o) { this.controller.next_view(o); },
