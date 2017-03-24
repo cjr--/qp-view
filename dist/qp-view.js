@@ -13,14 +13,17 @@ define(module, function(exports, require, make) {
 
     init: function(o) {
       // debug('view.init', this.model.self.ns, '->', o.element)
+      o = qp.options(o, { auto: true, bind: true, draw: true });
       this.model = o.model;
       this.element = qp.element(o.el || o.element);
       this.node = {
         element: this.element,
         bindings: []
       };
-      if (o.auto || o.bind) this.bind();
-      if (o.auto || (o.bind && o.update_view)) this.update_view();
+      if (o.auto) {
+        if (o.bind) this.bind();
+        if (o.bind && o.update_view) this.update_view();
+      }
     },
 
     bind: function() {
@@ -462,10 +465,11 @@ define(module, function(exports, require, make) {
     controls: [],
 
     init: function(o) {
-      o = qp.options(o, { bind: true, draw: true });
+      o = qp.options(o, { auto: true, bind: true, draw: true });
       this.view = view.create({
         model: this,
         element: o.el || o.element,
+        auto: o.auto,
         bind: o.bind,
         update_view: o.draw
       });
