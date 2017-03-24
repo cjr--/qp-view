@@ -19,10 +19,11 @@ define(module, function(exports, require, make) {
     controls: [],
 
     init: function(o) {
-      o = qp.options(o, { bind: true, draw: true });
+      o = qp.options(o, { auto: true, bind: true, draw: true });
       this.view = view.create({
         model: this,
         element: o.el || o.element,
+        auto: o.auto,
         bind: o.bind,
         update_view: o.draw
       });
