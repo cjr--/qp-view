@@ -39,13 +39,10 @@ define(module, function(exports, require, make) {
     unload: function() { },
     reset: function() { },
 
-    create_controller: function(name) {
-      this.controller = controller.create({ name: name });
-    },
-
-    views: function(views) {
+    view_controller: function(o) {
+      this.controller = controller.create(o.controller);
       if (this.controller) {
-        qp.each(views, this.controller.add_view);
+        qp.each(o.views, this.controller.add_view);
       }
     },
 
