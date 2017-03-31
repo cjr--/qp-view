@@ -7,15 +7,8 @@ define(module, function(exports, require, make) {
 
     ns: 'qp-view/controller',
 
-    name: 'controller',
-
     views: [],
-
     history: [],
-
-    init: function(o) {
-      this.store = store.create({ key: 'help.littleacorns', ctx: o.state_context });
-    },
 
     add_view: function(o) {
       this.views.push({ key: o.key, ctor: o.ctor, el: o.el });

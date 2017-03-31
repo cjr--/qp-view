@@ -18,10 +18,12 @@ define(module, function(exports, require) {
   log.clear();
   log(log.blue_white(' qp-view '));
 
-  var watcher = watch([
-    path.join(process.cwd(), 'src')
-  ], { recursive: true }, function(event_type, file) {
-    if (/\.(js|css)$/.test(file)) build();
+  var watcher = watch(path.join(process.cwd(), 'src'), { recursive: true }, (type, file) => {
+    file = file || type;
+    if (/\.(js|css)$/.test(file)) {
+      log(qp.after(file, __dirname));
+      build();
+    }
   });
 
   function build() {
