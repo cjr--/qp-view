@@ -57,7 +57,7 @@ define(module, function(exports, require, make) {
 
     parse: function(node) {
       if (qp.has_attr(node.element, 'v-view')) {
-        debug('view.bind @', qp.attr(node.element, 'v-view'))
+        // debug('view.bind @', qp.attr(node.element, 'v-view'))
         node.element.removeAttribute('v-view');
         return node;
       }
@@ -153,9 +153,6 @@ define(module, function(exports, require, make) {
       if (qp.match(binding.path, 'not *')) {
         binding.path = attribute.value.slice(4);
         binding.negate = true;
-      }
-      if (qp.match(binding.path, 'app.*')) {
-        binding.path = 'global.' + binding.path;
       }
       if (qp.in(binding.type, 'node', 'page')) {
         node.ignore = true;
@@ -253,7 +250,7 @@ define(module, function(exports, require, make) {
     on: function(binding, element) {
       binding.update_view = function(model) {
         if (!binding.bound) {
-          if (qp.in(binding.event, 'keyup', 'keydown')) {
+          if (qp.in(binding.event, 'keyup', 'keydown', 'keypress', 'input')) {
             binding.event_listener = function(e) {
               qp.get(model, binding.path).call(model, e);
             };
