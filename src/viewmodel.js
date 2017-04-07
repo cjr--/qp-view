@@ -11,6 +11,7 @@ define(module, function(exports, require, make) {
     view: null,
     controller: null,
     visible: false,
+    hidden: true,
     item_key: '',
     list_key: '',
     controls: [],
@@ -49,6 +50,11 @@ define(module, function(exports, require, make) {
 
     set_visible: function(visible) {
       this.visible = visible;
+      this.draw();
+    },
+
+    set_hidden: function(hidden) {
+      this.hidden = hidden;
       this.draw();
     },
 

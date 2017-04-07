@@ -92,7 +92,7 @@ define(module, function(exports, require, make) {
             binding.type = 'visible';
             binding.show = binding.name === 'show';
             binding.hide = !binding.show;
-          } else if (qp.in(binding.name, 'readonly', 'disabled')) {
+          } else if (qp.in(binding.name, 'readonly', 'disabled', 'hidden')) {
             binding.attribute = binding.name;
             binding.boolean = true;
           } else if (binding.name === 'text') {
@@ -180,6 +180,20 @@ define(module, function(exports, require, make) {
       };
     },
 
+    hidden: function(binding, element) {
+      binding.update_view = function(model) {
+        var toggle = qp.get(model, binding.path);
+        if ((binding.show && toggle) || (binding.hide && !toggle)) {
+          qp.remove_attribute(element, 'hidden');
+        } else {
+          qp.set_attribute(element, 'hidden', '')
+        }
+      };
+      binding.update_model = function(model) {
+        qp.set(model, binding.path, qp.has_attribute(element, 'hidden'));
+      };
+    },
+
     class: function(binding, element) {
       binding.update_view = function(model) {
         if (qp.get(model, binding.path)) {
@@ -189,7 +203,7 @@ define(module, function(exports, require, make) {
         }
       };
       binding.update_model = function(model) {
-        qp.set(model, binding.path, qp.has_class(element));
+        qp.set(model, binding.path, qp.has_class(element, binding.class));
       };
     },
 
@@ -229,7 +243,7 @@ define(module, function(exports, require, make) {
       if (binding.boolean) {
         binding.update_view = function(model) {
           if (qp.get(model, binding.path)) {
-            element.setAttribute(binding.attribute);
+            element.setAttribute(binding.attribute, '');
           } else {
             element.removeAttribute(binding.attribute);
           }

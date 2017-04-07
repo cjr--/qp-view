@@ -91,7 +91,7 @@ define(module, function(exports, require, make) {
         view.instance || (view.instance = view.ctor.create({ el: view.el, controller: this }));
         view.instance.load(o, function load_complete() {
           view.instance.show();
-          view.instance.set_visible(true);
+          view.instance.set_hidden(false);
           view.instance.ready();
           if (o.done) o.done();
         }.bind(this));
@@ -102,7 +102,7 @@ define(module, function(exports, require, make) {
       var view = qp.find(this.views, { key: o.key });
       if (view) {
         view.instance.hide();
-        view.instance.set_visible(false);
+        view.instance.set_hidden(true);
         view.instance.unload();
         if (o.done) o.done();
       }
