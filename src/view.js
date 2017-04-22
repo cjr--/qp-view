@@ -103,6 +103,8 @@ define(module, function(exports, require, make) {
             binding.property = 'value';
           } else if (binding.name === 'template') {
             binding.type = 'template';
+          } else if (qp.in(binding.name, 'src', 'alt')) {
+            binding.property = binding.name;
           } else if (binding.name === 'each') {
             var items = binding.path.split(' in ');
             binding.item_name = items[0];
