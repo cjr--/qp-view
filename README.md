@@ -1,2 +1,0 @@
-# qp-view
-view manager
