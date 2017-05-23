@@ -1,6 +1,7 @@
 define(module, function(exports, require, make) {
 
   var qp = require('qp-utility');
+  var id = 1000;
 
   make({
 
@@ -25,6 +26,22 @@ define(module, function(exports, require, make) {
         if (o.bind && o.update_view) this.update_view();
       }
     },
+
+    /*
+    1. parse; walk html and create bindings
+    2. bind; walk bindings and attach observers to model keys
+    3. update_view; walk bindings and update the html
+    4. once observers in place any change would update the view
+
+    - how to connect the binding to the on_change handler?
+    - whilst walking bindings only referenced model keys would need an observer, so call watch_property on each
+      model key as needed, this allows a specific on_change handler per binding.
+      - how to keep references safely?
+      - memory leaks ...
+      - can the path be used?
+    - arrays
+      - list type?
+    */
 
     bind: function() {
       this.parse(this.node);
@@ -145,6 +162,7 @@ define(module, function(exports, require, make) {
     create_binding: function(node, attribute) {
       var attribute_name = attribute.name.slice(2);
       var binding = {
+        id: id++,
         key: attribute.name,
         name: attribute_name,
         type: attribute_name,
